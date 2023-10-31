@@ -1,9 +1,8 @@
-package com.example.taskmanagement;
+package com.example.taskmanagement.user;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.room.Room;
 
 import android.Manifest;
@@ -11,7 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,12 +21,12 @@ import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.taskmanagement.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Random;
 
 import configurations.CloudinaryConfig;
 import constants.Constants;
@@ -37,27 +35,36 @@ import executors.AppExecutors;
 import models.User;
 import utils.CircleTransform;
 
-public class RegisterActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity {
 
-    Uri imageUri;
-    ImageView imgAvatar;
-    EditText etUsername, etPassword, etName, etEmail;
-    Button btnRegister;
+    User loginUser;
+    ImageView imgBack, imgAvatar;
+    EditText etUsername, etPassword, etName, etEmail, etCode;
+    Button btnUpdate;
+    Uri updateImageUri;
     TaskStoreDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_user_profile);
 
         initView();
         initDb();
+        loadData();
+
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         imgAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, Constants.GALLERY_REQUEST_CODE);
                 }
                 else{
@@ -69,66 +76,53 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String username = etUsername.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
                 String name = etName.getText().toString().trim();
                 String email = etEmail.getText().toString().trim();
 
-                if(validate(username, password, name)){
+                if(validate(password, name, email)){
                     AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                            boolean checkUsername = db.userDAO().getUserByUsername(username) != null;
-                            boolean checkEmail = db.userDAO().getUserByEmail(email) != null;
+                            User checkUser = db.userDAO().getUserByEmail(email);
+                            if(checkUser == null || checkUser.getUserId() == loginUser.getUserId()){
 
-                            if(checkUsername || checkEmail){
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(checkUsername){
-                                            etUsername.setError(Constants.USERNAME_ALREADY_TAKEN);
-                                        }
-                                        if(checkEmail){
-                                            etEmail.setError(Constants.EMAIL_ALREADY_TAKEN);
-                                        }
-                                    }
-                                });
-                            }
-                            else{
-                                String imageAvatarUrl = Constants.DEFAULT_AVATAR;
-                                if(imageUri != null && imageUri.toString().length() > 0){
+                                loginUser.setName(name);
+                                loginUser.setEmail(email);
+                                if(password != null){
+                                    loginUser.setPassword(password);
+                                }
+
+                                if(updateImageUri != null && updateImageUri.toString().length() > 0){
                                     Cloudinary cloudinary = CloudinaryConfig.getCloudinary();
-                                    String path = getRealPathFromURI(imageUri);
+                                    String path = getRealPathFromURI(updateImageUri);
                                     try {
                                         Map uploadResult = cloudinary.uploader().upload(new File(path), ObjectUtils.emptyMap());
-                                        imageAvatarUrl = uploadResult.get("secure_url").toString();
+                                        loginUser.setImageUrl(uploadResult.get("secure_url").toString());
                                     } catch (IOException e) {
                                         Log.e("Error cloudinary", "Ko upload đc file");
                                         throw new RuntimeException(e);
                                     }
                                 }
 
-                                boolean check = true;
-                                String inviteCode = generateRandomString(6);
-                                while (check){
-                                    check =  db.userDAO().getUserByInviteCode(inviteCode) != null;
-                                    if(check){
-                                        inviteCode = generateRandomString(6);
-                                    }
-                                }
-
-                                User newUser = new User(username, password, Constants.USER, inviteCode, imageAvatarUrl, false, name, email);
-                                db.userDAO().insert(newUser);
+                                db.userDAO().update(loginUser);
 
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(RegisterActivity.this, "Register new account successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(UserProfileActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();
                                         finish();
+                                    }
+                                });
+                            }
+                            else{
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        etEmail.setError(Constants.EMAIL_ALREADY_TAKEN);
                                     }
                                 });
                             }
@@ -146,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK){
             if(requestCode == Constants.GALLERY_REQUEST_CODE){
                 // for gallery
-                imageUri = data.getData();
+                updateImageUri = data.getData();
                 Picasso.get()
                         .load(data.getData())
                         .transform(new CircleTransform())
@@ -172,41 +166,19 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-
-    private void initView(){
-        imgAvatar = findViewById(R.id.imgAvatar_register);
-        etUsername = findViewById(R.id.etUsername_register);
-        etPassword = findViewById(R.id.etPassword_register);
-        etName = findViewById(R.id.etEmail_register);
-        etEmail = findViewById(R.id.etEmail_register);
-        btnRegister = findViewById(R.id.btnRegister);
-
-        Picasso.get()
-                .load(Constants.DEFAULT_AVATAR)
-                .transform(new CircleTransform())
-                .into(imgAvatar);
-    }
-
-    private void initDb(){
-        db = Room.databaseBuilder(getApplicationContext(), TaskStoreDatabase.class, Constants.DB_NAME).build();
-    }
-
-    private boolean validate(String username, String password, String name){
+    private boolean validate(String password, String name, String email){
         boolean result = true;
 
-        if(username == null || username.length() == 0){
-            etUsername.setError(Constants.REQUIRE_MESSAGE);
+        if(email == null || email.length() == 0){
+            etEmail.setError(Constants.REQUIRE_MESSAGE);
             result = false;
         }
 
-        if(password == null || password.length() == 0){
-            etPassword.setError(Constants.REQUIRE_MESSAGE);
-            result = false;
-        }
-
-        if(password.length() < 5){
-            etPassword.setError(Constants.PASSWORD_LENGTH_REQUIRE_MESSAGE);
-            result = false;
+        if(password != null && password.length() != 0){
+            if(password.length() < 5){
+                etPassword.setError(Constants.PASSWORD_LENGTH_REQUIRE_MESSAGE);
+                result = false;
+            }
         }
 
         if(name == null || name.length() == 0){
@@ -217,17 +189,40 @@ public class RegisterActivity extends AppCompatActivity {
         return result;
     }
 
-    private String generateRandomString(int length){
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        int charactersLength = characters.length();
-        Random random = new Random();
-        StringBuilder stringBuilder = new StringBuilder(length);
+    private void initView(){
+        imgBack = findViewById(R.id.imgArrowBack_profile);
+        imgAvatar = findViewById(R.id.imgAvatar_profile);
+        etUsername = findViewById(R.id.etUsername_profile);
+        etPassword = findViewById(R.id.etPassword_profile);
+        etName = findViewById(R.id.etName_profile);
+        etEmail = findViewById(R.id.etEmail_profile);
+        etCode = findViewById(R.id.etCode_profile);
+        btnUpdate = findViewById(R.id.btnUpdate_profile);
+    }
 
-        for(int i = 0; i < length; i++){
-            stringBuilder.append(characters.charAt(random.nextInt(charactersLength)));
+    private void initDb(){
+        db = Room.databaseBuilder(getApplicationContext(), TaskStoreDatabase.class, Constants.DB_NAME).build();
+    }
+
+    private void loadData(){
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if(bundle != null){
+            loginUser = (User) bundle.getSerializable("user");
         }
-
-        return stringBuilder.toString();
+        if(loginUser == null){
+            Toast.makeText(this, "Load informatiom failed, please try again", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Picasso.get()
+                    .load(loginUser.getImageUrl())
+                    .transform(new CircleTransform())
+                    .into(imgAvatar);
+            etUsername.setText(loginUser.getUsername());
+            etName.setText(loginUser.getName());
+            etEmail.setText(loginUser.getEmail());
+            etCode.setText(loginUser.getInviteCode());
+        }
     }
 
     private String getRealPathFromURI(Uri contentUri){

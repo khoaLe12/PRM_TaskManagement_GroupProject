@@ -18,5 +18,6 @@ public class Constants {
     public static final String DEFAULT_AVATAR = "https://github.com/khoaLe12/Public-Image/blob/main/Screenshot%202023-10-30%20191009.png?raw=true";
 
     public static final int GALLERY_REQUEST_CODE = 100;
+    //public static final int PICK_FROM_GALLERY = 1;
 
 }

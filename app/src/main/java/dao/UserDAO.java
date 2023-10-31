@@ -18,6 +18,9 @@ import models.relationships.UserWithTasks;
 @Dao
 public interface UserDAO {
 
+    @Query("SELECT * FROM user WHERE inviteCode LIKE :inviteCode LIMIT 1")
+    User getUserByInviteCode(String inviteCode);
+
     @Query("SELECT * FROM user WHERE username LIKE :username AND password LIKE :password LIMIT 1")
     User getUserByUsernameAndPassword(String username, String password);
 

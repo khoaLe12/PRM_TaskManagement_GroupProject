@@ -3,6 +3,7 @@ package com.example.taskmanagement.user;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +22,7 @@ import utils.CircleTransform;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
+    User loginUser;
     ImageView imgAvatar, imgLogout;
     TextView txtName, txtEmail, txtToday;
     TaskStoreDatabase db;
@@ -32,7 +34,6 @@ public class UserDashboardActivity extends AppCompatActivity {
 
         initView();
         initDb();
-        LoadData();
 
         imgLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +45,33 @@ public class UserDashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        imgAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProfile();
+            }
+        });
+
+        txtEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProfile();
+            }
+        });
+
+        txtName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProfile();
+            }
+        });
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        loadUserInformation();
     }
 
     private void initView(){
@@ -58,7 +86,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         db = Room.databaseBuilder(getApplicationContext(), TaskStoreDatabase.class, Constants.DB_NAME).build();
     }
 
-    private void LoadData(){
+    private void loadUserInformation(){
 
         SharedPreferences shared = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE);
         int userId = shared.getInt(Constants.USER_ID, 0);
@@ -66,18 +94,18 @@ public class UserDashboardActivity extends AppCompatActivity {
         AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
             @Override
             public void run() {
-                User user = db.userDAO().getUserById(userId);
+                loginUser = db.userDAO().getUserById(userId);
 
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(user != null){
+                        if(loginUser != null){
                             Picasso.get()
-                                    .load(user.getImageUrl())
+                                    .load(loginUser.getImageUrl())
                                     .transform(new CircleTransform())
                                     .into(imgAvatar);
-                            txtName.setText(user.getName());
-                            txtEmail.setText(user.getEmail());
+                            txtName.setText(loginUser.getName());
+                            txtEmail.setText(loginUser.getEmail());
                         }
                         else{
                             Toast.makeText(UserDashboardActivity.this, "Load data failed", Toast.LENGTH_SHORT).show();
@@ -86,5 +114,13 @@ public class UserDashboardActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void openProfile(){
+        Intent intent = new Intent(UserDashboardActivity.this, UserProfileActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user", loginUser);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
