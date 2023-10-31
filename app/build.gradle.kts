@@ -49,4 +49,7 @@ dependencies {
 
     //Picasso for loading and displaying image from external url
     implementation ("com.squareup.picasso:picasso:2.8")
+
+    //Cloudinary for upload file
+    implementation("com.cloudinary:cloudinary-android:2.3.1")
 }

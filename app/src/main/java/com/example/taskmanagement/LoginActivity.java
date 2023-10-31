@@ -89,24 +89,35 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        tvRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private boolean validate(String username, String password){
+        boolean result = true;
+
         if(username == null || username.length() == 0){
             etUsername.setError(Constants.REQUIRE_MESSAGE);
-            return false;
+            result = false;
         }
 
         if(password == null || password.length() == 0){
             etPassword.setError(Constants.REQUIRE_MESSAGE);
-            return false;
+            result = false;
         }
 
         if(password.length() < 5){
             etPassword.setError(Constants.PASSWORD_LENGTH_REQUIRE_MESSAGE);
+            result = false;
         }
 
-        return true;
+        return result;
     }
 
     private void initDb(){
