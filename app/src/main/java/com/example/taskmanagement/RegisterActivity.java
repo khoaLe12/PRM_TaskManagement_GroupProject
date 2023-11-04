@@ -40,7 +40,7 @@ import utils.CircleTransform;
 public class RegisterActivity extends AppCompatActivity {
 
     Uri imageUri;
-    ImageView imgAvatar;
+    ImageView imgAvatar, imgBack;
     EditText etUsername, etPassword, etName, etEmail;
     Button btnRegister;
     TaskStoreDatabase db;
@@ -66,6 +66,13 @@ public class RegisterActivity extends AppCompatActivity {
                     iGallery.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(iGallery, Constants.GALLERY_REQUEST_CODE);
                 }
+            }
+        });
+
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
@@ -121,7 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                User newUser = new User(username, password, Constants.USER, inviteCode, imageAvatarUrl, false, name, email);
+                                User newUser = new User(username, password, Constants.USER, inviteCode, imageAvatarUrl, false, name, email, "District 1");
                                 db.userDAO().insert(newUser);
 
                                 runOnUiThread(new Runnable() {
@@ -175,6 +182,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initView(){
         imgAvatar = findViewById(R.id.imgAvatar_register);
+        imgBack =findViewById(R.id.imgArrowBack_register);
         etUsername = findViewById(R.id.etUsername_register);
         etPassword = findViewById(R.id.etPassword_register);
         etName = findViewById(R.id.etEmail_register);

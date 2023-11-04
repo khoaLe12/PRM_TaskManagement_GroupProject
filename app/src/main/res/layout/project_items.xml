@@ -5,70 +5,47 @@
     android:layout_height="wrap_content"
     android:background="@drawable/custom_layout_border"
     android:orientation="vertical"
-    android:layout_marginBottom="10dp">
-    <LinearLayout
+    android:layout_marginBottom="10dp"
+    android:id="@+id/projectItem_layout">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginBottom="10dp">
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="30sp"/>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="In Progress"
-                android:textSize="17sp"
-                android:paddingLeft="5sp"
-                android:paddingRight="5sp"
-                android:paddingTop="3sp"
-                android:paddingBottom="3sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="#5ACFA6"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date: "
-            android:textSize="22sp"
-            android:layout_marginRight="20dp"/>
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Date"
-            android:textSize="22sp"/>
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/imgRoleIcon_project_item"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvStatus_project_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5sp"
+            android:paddingTop="3sp"
+            android:paddingRight="5sp"
+            android:paddingBottom="3sp"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvTitle_project_item"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Manager: "
-            android:textSize="22sp"
-            android:layout_marginRight="20dp"/>
-        <TextView
-            android:id="@+id/tvManager"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"
-            android:textSize="22sp"/>
-    </LinearLayout>
+        android:text="This Is A Title"
+        android:textStyle="bold"
+        android:textSize="25sp"/>
+
+    <TextView
+        android:id="@+id/tvDate_project_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20/10/2022"
+        android:textSize="18sp"/>
 </LinearLayout>

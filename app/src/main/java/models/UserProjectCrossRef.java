@@ -6,4 +6,9 @@ import androidx.room.Entity;
 public class UserProjectCrossRef {
     public int userId;
     public int projectId;
+
+    public UserProjectCrossRef(int userId, int projectId){
+        this.userId = userId;
+        this.projectId = projectId;
+    }
 }

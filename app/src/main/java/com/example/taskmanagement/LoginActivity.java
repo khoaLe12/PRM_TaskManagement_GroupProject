@@ -75,6 +75,12 @@ public class LoginActivity extends AppCompatActivity {
                                             startActivity(intent);
                                         }
                                         else if(user.getRole().equals(Constants.ADMIN)){
+
+                                            SharedPreferences shared = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = shared.edit();
+                                            editor.putInt(Constants.USER_ID, -1);
+                                            editor.apply(); //Save data into a file
+
                                             Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
                                             startActivity(intent);
                                         }
@@ -136,8 +142,8 @@ public class LoginActivity extends AppCompatActivity {
         AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
             @Override
             public void run() {
-                User admin = new User("admin", "admin", Constants.ADMIN, null, Constants.DEFAULT_AVATAR, false, "I am admin", "admin@gmail.com");
-                User user = new User("user", "user1", Constants.USER, null, Constants.DEFAULT_AVATAR, false, "I am user", "user@gmail.com");
+                User admin = new User("admin", "admin", Constants.ADMIN, null, Constants.DEFAULT_AVATAR, false, "I am admin", "admin@gmail.com", "District 12");
+                User user = new User("user", "user1", Constants.USER, null, Constants.DEFAULT_AVATAR, false, "I am user", "user@gmail.com", "District 1");
                 db.userDAO().insert(admin);
                 db.userDAO().insert(user);
             }

@@ -8,10 +8,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taskmanagement.BillActivity;
+import com.example.taskmanagement.ProjectActivity;
 import com.example.taskmanagement.R;
+import com.example.taskmanagement.TaskActivity;
 import com.squareup.picasso.Picasso;
 
 import constants.Constants;
@@ -22,6 +26,7 @@ import utils.CircleTransform;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
+    LinearLayout projectTab, taskTab, billTab;
     User loginUser;
     ImageView imgAvatar, imgLogout;
     TextView txtName, txtEmail, txtToday;
@@ -66,6 +71,33 @@ public class UserDashboardActivity extends AppCompatActivity {
                 openProfile();
             }
         });
+
+        projectTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserDashboardActivity.this, ProjectActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        taskTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserDashboardActivity.this, TaskActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        billTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserDashboardActivity.this, BillActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -80,6 +112,9 @@ public class UserDashboardActivity extends AppCompatActivity {
         txtName = findViewById(R.id.tvName_dashboard);
         txtEmail = findViewById(R.id.tvEmail_dashboard);
         txtToday = findViewById(R.id.tvToday_dashboard);
+        projectTab = findViewById(R.id.projectTab_user_dashboard);
+        taskTab = findViewById(R.id.taskTab_user_dashboard);
+        billTab = findViewById(R.id.billTab_user_dashboard);
     }
 
     private void initDb(){

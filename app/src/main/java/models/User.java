@@ -12,6 +12,7 @@ public class User implements Serializable{
     private int userId;
     private String name;
     private String email;
+    private String location;
     private String inviteCode;
     private String username;
     private String password;
@@ -19,7 +20,7 @@ public class User implements Serializable{
     private String imageUrl;
     private boolean blocked;
 
-    public User(String username, String password, String role, String inviteCode, String imageUrl, boolean blocked, String name, String email) {
+    public User(String username, String password, String role, String inviteCode, String imageUrl, boolean blocked, String name, String email, String location) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -28,10 +29,11 @@ public class User implements Serializable{
         this.blocked = blocked;
         this.name = name;
         this.email = email;
+        this.location = location;
     }
 
     @Ignore
-    public User(int id, String username, String password, String role, String inviteCode, String imageUrl, boolean blocked, String name, String email) {
+    public User(int id, String username, String password, String role, String inviteCode, String imageUrl, boolean blocked, String name, String email, String location) {
         this.userId = id;
         this.username = username;
         this.password = password;
@@ -41,6 +43,7 @@ public class User implements Serializable{
         this.blocked = blocked;
         this.name = name;
         this.email = email;
+        this.location = location;
     }
 
     public int getUserId() {
@@ -50,6 +53,10 @@ public class User implements Serializable{
     public void setUserId(int id) {
         this.userId = id;
     }
+
+    public String getLocation(){ return location; }
+
+    public void setLocation(String location){ this.location = location; }
 
     public String getEmail(){ return email; }
 

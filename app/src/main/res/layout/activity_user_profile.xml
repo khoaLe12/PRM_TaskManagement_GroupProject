@@ -20,7 +20,7 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="30dp"
         android:text="Profile"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,8 +30,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="196dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="176dp"
         android:text="Avatar"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
         android:id="@+id/imgAvatar_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/custom_layout_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,7 +51,7 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/imgAvatar_profile"
         tools:layout_editor_absoluteX="0dp">
@@ -79,7 +79,7 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="28dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         tools:layout_editor_absoluteX="0dp">
@@ -106,7 +106,7 @@
         android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="28dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
         tools:layout_editor_absoluteX="0dp">
@@ -132,7 +132,7 @@
         android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="28dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
         tools:layout_editor_absoluteX="0dp">
@@ -159,7 +159,7 @@
         android:id="@+id/linearLayout6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="28dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
         tools:layout_editor_absoluteX="0dp">
@@ -177,9 +177,9 @@
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_layout_border"
+            android:enabled="false"
             android:inputType="textEmailAddress"
             android:textSize="20sp"
-            android:enabled="false"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </LinearLayout>
 
@@ -187,7 +187,7 @@
         android:id="@+id/btnUpdate_profile"
         android:layout_width="140dp"
         android:layout_height="55dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="30dp"
         android:text="Update"
         android:textSize="18sp"
         android:textStyle="bold"

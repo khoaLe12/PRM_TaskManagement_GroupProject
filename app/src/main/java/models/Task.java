@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Entity(tableName = "task")
 public class Task {
@@ -21,14 +22,14 @@ public class Task {
     private int confirmStatus;
 
     private String report;
-    private List<String> filePaths;
+    private Map<String,String> filePaths;
     private String comments;
 
     private int creatorId;
     private int projectId;
 
     @Ignore
-    public Task(int id, String title, String description, Date deadline, int status, String report, List<String> filePaths, String comments, int creatorId, int projectId, int confirmStatus) {
+    public Task(int id, String title, String description, Date deadline, int status, String report, Map<String,String> filePaths, String comments, int creatorId, int projectId, int confirmStatus) {
         this.taskId = id;
         this.title = title;
         this.description = description;
@@ -42,7 +43,7 @@ public class Task {
         this.confirmStatus = confirmStatus;
     }
 
-    public Task(String title, String description, Date deadline, int status, String report, List<String> filePaths, String comments, int creatorId, int projectId, int confirmStatus) {
+    public Task(String title, String description, Date deadline, int status, String report, Map<String,String> filePaths, String comments, int creatorId, int projectId, int confirmStatus) {
         this.title = title;
         this.description = description;
         this.deadline = deadline;
@@ -107,11 +108,11 @@ public class Task {
         this.report = report;
     }
 
-    public List<String> getFilePaths() {
+    public Map<String,String> getFilePaths() {
         return filePaths;
     }
 
-    public void setFilePaths(List<String> filePaths) {
+    public void setFilePaths(Map<String,String> filePaths) {
         this.filePaths = filePaths;
     }
 

@@ -22,6 +22,9 @@ public interface ProjectDAO {
     @Query("SELECT * FROM project")
     List<Project> getProjects();
 
+    @Query("SELECT * FROM project WHERE title LIKE '%' || :searchString || '%'")
+    List<Project> getProjectsByTitle(String searchString);
+
     @Transaction
     @Query("SELECT * FROM project WHERE projectId IN (:projectId) LIMIT 1")
     ProjectWithMembers getProjectWithMembersById(int projectId);

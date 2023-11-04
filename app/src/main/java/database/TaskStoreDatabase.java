@@ -8,6 +8,7 @@ import dao.BillDAO;
 import dao.ProjectDAO;
 import dao.TaskDAO;
 import dao.UserDAO;
+import dao.UserProjectCrossRefDAO;
 import models.Bill;
 import models.Project;
 import models.Task;
@@ -22,4 +23,5 @@ public abstract class TaskStoreDatabase extends RoomDatabase {
     public abstract ProjectDAO projectDAO();
     public abstract TaskDAO taskDAO();
     public abstract UserDAO userDAO();
+    public abstract UserProjectCrossRefDAO userProjectDAO();
 }

@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Entity(tableName = "project")
 public class Project {
@@ -14,25 +15,23 @@ public class Project {
     private String title;
     private String content;
     private Date createdDate;
-    private String location;
 
     //In Progress, End
     private int status;
-    private List<String> filePaths;
+    private Map<String,String> filePaths;
     private int managerId;
 
-    public Project(int status, String title, String content, Date createdDate, List<String> filePaths, int managerId, String location) {
+    public Project(int status, String title, String content, Date createdDate,Map<String,String> filePaths, int managerId) {
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
         this.filePaths = filePaths;
         this.managerId = managerId;
         this.status = status;
-        this.location = location;
     }
 
     @Ignore
-    public Project(int status, int projectId, String title, String content, Date createdDate, List<String> filePaths, int managerId, String location) {
+    public Project(int status, int projectId, String title, String content, Date createdDate, Map<String,String> filePaths, int managerId) {
         this.projectId = projectId;
         this.title = title;
         this.content = content;
@@ -40,7 +39,6 @@ public class Project {
         this.filePaths = filePaths;
         this.managerId = managerId;
         this.status = status;
-        this.location = location;
     }
 
     public int getStatus(){
@@ -83,11 +81,11 @@ public class Project {
         this.createdDate = createdDate;
     }
 
-    public List<String> getFilePaths() {
+    public Map<String,String> getFilePaths() {
         return filePaths;
     }
 
-    public void setFilePaths(List<String> filePaths) {
+    public void setFilePaths(Map<String,String> filePaths) {
         this.filePaths = filePaths;
     }
 
@@ -97,13 +95,5 @@ public class Project {
 
     public void setManagerId(int id){
         managerId = id;
-    }
-
-    public String getLocation(){
-        return location;
-    }
-
-    public void setLocation(String location){
-        this.location = location;
     }
 }

@@ -92,7 +92,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
                                 loginUser.setName(name);
                                 loginUser.setEmail(email);
-                                if(password != null){
+                                if(password != null && password.length() != 0){
                                     loginUser.setPassword(password);
                                 }
 
