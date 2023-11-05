@@ -45,9 +45,16 @@
             android:id="@+id/linearLayout_project_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginTop="30dp"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@+id/llHead">
+=======
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/llHead"
+            tools:layout_editor_absoluteX="0dp">
+>>>>>>> 8246a7536bab671a989db33284fb7e5e520d1603
 
             <LinearLayout
                 android:layout_width="match_parent"

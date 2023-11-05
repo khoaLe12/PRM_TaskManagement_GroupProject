@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
     <application
         android:allowBackup="true"
@@ -18,6 +21,7 @@
         android:theme="@style/Theme.TaskManagement"
         tools:targetApi="31">
         <activity
+<<<<<<< HEAD
             android:name=".project.ProjectUpdateActivity"
             android:exported="false" />
         <activity
@@ -26,6 +30,16 @@
         <activity
             android:name=".TaskCreateActivity"
             android:exported="false" />
+=======
+            android:name=".MapActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+>>>>>>> 8246a7536bab671a989db33284fb7e5e520d1603
         <activity
             android:name=".ProjectDetailActivity"
             android:exported="false" />
@@ -62,6 +76,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDs9tNLKmSXUrTHBCGEZM5_vftvA1sUkOU" />
     </application>
 
 </manifest>

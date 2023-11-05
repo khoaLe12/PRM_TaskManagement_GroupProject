@@ -3,6 +3,9 @@ package com.example.taskmanagement.user;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.room.Room;
 
 import android.Manifest;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.taskmanagement.MapActivity;
 import com.example.taskmanagement.R;
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +40,6 @@ import models.User;
 import utils.CircleTransform;
 
 public class UserProfileActivity extends AppCompatActivity {
-
     User loginUser;
     ImageView imgBack, imgAvatar;
     EditText etUsername, etPassword, etName, etEmail, etCode;

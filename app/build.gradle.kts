@@ -52,4 +52,7 @@ dependencies {
 
     //Cloudinary for upload file
     implementation("com.cloudinary:cloudinary-android:2.3.1")
+
+    //Google map
+    implementation("com.google.android.gms:play-services-maps:18.0.1")
 }
