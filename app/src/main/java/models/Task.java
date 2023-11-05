@@ -16,9 +16,9 @@ public class Task {
     private String description;
     private Date deadline;
 
-    // In Progress, Done, Overdue
+    // In Progress, Done, Overdue (0,1,2)
     private int status;
-    // Đang chờ, xác nhận, chưa đạt
+    // Đang chờ, xác nhận, chưa đạt (0,1,2)
     private int confirmStatus;
 
     private String report;

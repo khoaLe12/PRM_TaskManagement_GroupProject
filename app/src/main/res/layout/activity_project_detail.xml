@@ -45,32 +45,35 @@
             android:id="@+id/linearLayout_project_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@+id/llHead">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="10">
+
                 <TextView
                     android:id="@+id/tvManager_project_detail"
-                    android:layout_marginLeft="25dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="manager"
-                    android:textSize="18sp"
-                    android:textColor="#6A7BF4"
+                    android:layout_marginLeft="25dp"
                     android:layout_weight="7"
-                    android:drawableLeft="@drawable/baseline_manager_24"/>
+                    android:drawableLeft="@drawable/baseline_manager_24"
+                    android:text="manager"
+                    android:textColor="#6A7BF4"
+                    android:textSize="18sp" />
+
                 <TextView
                     android:id="@+id/tvStatus_project_detail"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="30dp"
-                    android:textSize="16sp"
                     android:layout_weight="3"
                     android:gravity="center"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
@@ -79,27 +82,27 @@
                 android:id="@+id/tvTitle_project_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title"
-                android:textStyle="bold"
-                android:textSize="30sp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="15dp"
+                android:text="Title"
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDate_project_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20-20-2000"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:text="20-20-2000" />
 
             <TextView
                 android:id="@+id/tvContent_project_detail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="content of project is here"
-                android:textSize="20sp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:text="content of project is here"
+                android:textSize="20sp" />
         </LinearLayout>
 
         <LinearLayout

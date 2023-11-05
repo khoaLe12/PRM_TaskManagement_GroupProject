@@ -185,7 +185,7 @@ public class RegisterActivity extends AppCompatActivity {
         imgBack =findViewById(R.id.imgArrowBack_register);
         etUsername = findViewById(R.id.etUsername_register);
         etPassword = findViewById(R.id.etPassword_register);
-        etName = findViewById(R.id.etEmail_register);
+        etName = findViewById(R.id.etName_register);
         etEmail = findViewById(R.id.etEmail_register);
         btnRegister = findViewById(R.id.btnRegister);
 

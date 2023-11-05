@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/custom_layout_border"
-    android:weightSum="10">
+    android:weightSum="10"
+    android:id="@+id/llMemberProfile_member_item">
     <ImageView
         android:id="@+id/ivAvatar_member_item"
         android:layout_width="0dp"
@@ -28,6 +29,5 @@
         android:layout_height="match_parent"
         android:padding="9dp"
         android:visibility="invisible"
-        android:src="@drawable/baseline_close_24"
         android:layout_weight="1.5"/>
 </LinearLayout>

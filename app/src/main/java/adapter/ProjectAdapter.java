@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,11 +58,11 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHold
 
         if(project.getStatus() == 1){
             holder.tvStatus.setText(Constants.IN_PROGRESS);
-            holder.tvStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.custom_in_progress_status));
+            holder.tvStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.custom_green_status));
         }
         else if(project.getStatus() == 0){
             holder.tvStatus.setText(Constants.END);
-            holder.tvStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.custom_end_status));
+            holder.tvStatus.setBackground(ContextCompat.getDrawable(context, R.drawable.custom_red_status));
         }
         else{
             holder.tvStatus.setText("Error");

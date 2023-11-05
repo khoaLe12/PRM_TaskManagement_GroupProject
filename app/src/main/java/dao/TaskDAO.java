@@ -13,6 +13,12 @@ import models.Task;
 @Dao
 public interface TaskDAO {
 
+    @Query("SELECT * FROM task")
+    List<Task> getAllTasks();
+
+    @Query("SELECT * FROM task WHERE creatorId IN (:userId) AND projectId IN (:projectId)")
+    List<Task> getTasksByUserIdAndProjectId(int userId, int projectId);
+
     @Query("SELECT * FROM task WHERE taskId IN (:taskId) LIMIT 1")
     Task getTaskById(int taskId);
 

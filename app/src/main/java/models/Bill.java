@@ -16,9 +16,10 @@ public class Bill {
     private Date createdDate;
     private int recipientId;
     private int senderId;
+    private int projectId;
 
     @Ignore
-    public Bill(int id, String title, String content, float money, Date createdDate, int recipientId, int senderId) {
+    public Bill(int id, String title, String content, float money, Date createdDate, int recipientId, int senderId, int projectId) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -26,15 +27,17 @@ public class Bill {
         this.createdDate = createdDate;
         this.recipientId = recipientId;
         this.senderId = senderId;
+        this.projectId = projectId;
     }
 
-    public Bill(String title, String content, float money, Date createdDate, int recipientId, int senderId) {
+    public Bill(String title, String content, float money, Date createdDate, int recipientId, int senderId, int projectId) {
         this.title = title;
         this.content = content;
         this.money = money;
         this.createdDate = createdDate;
         this.recipientId = recipientId;
         this.senderId = senderId;
+        this.projectId = projectId;
     }
 
     public int getId() {
@@ -43,6 +46,14 @@ public class Bill {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getProjectId(){
+        return projectId;
+    }
+
+    public void setProjectId(int projectId){
+        this.projectId = projectId;
     }
 
     public String getTitle() {

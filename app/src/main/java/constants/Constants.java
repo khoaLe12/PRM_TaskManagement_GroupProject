@@ -5,6 +5,7 @@ public class Constants {
 
     public static final String LOGIN = "Login";
     public static final String USER_ID= "User_Id";
+    public static final String PROJECT_ID = "projectId";
 
     public static final String USERNAME_ALREADY_TAKEN = "Username is already taken";
     public static final String EMAIL_ALREADY_TAKEN = "Email is already taken";
@@ -23,7 +24,11 @@ public class Constants {
 
     public static final String IN_PROGRESS = "In Progress";
     public static final String END = "End";
+    public static final String DONE = "Done";
+    public static final String OVERDUE = "Overdue";
 
-    public static final String PROJECT_ID = "projectId";
+    public static final String WAITING = "Waiting";
+    public static final String CONFIRM = "Confirm";
+    public static final String REJECT = "Reject";
 
 }

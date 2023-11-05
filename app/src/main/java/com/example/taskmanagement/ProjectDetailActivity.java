@@ -6,17 +6,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.taskmanagement.project.ProjectUpdateActivity;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,6 +31,7 @@ import java.util.stream.Collectors;
 
 import adapter.AttachmentAdapter;
 import adapter.MemberAdapter;
+import adapter.TaskAdapter;
 import constants.Constants;
 import database.TaskStoreDatabase;
 import executors.AppExecutors;
@@ -41,8 +49,10 @@ public class ProjectDetailActivity extends AppCompatActivity {
     TaskStoreDatabase db;
     AttachmentAdapter attachmentAdapter;
     MemberAdapter memberAdapter;
+    TaskAdapter taskAdapter;
     int ProjectId = 0;
     List<User> members;
+    Project project;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +93,65 @@ public class ProjectDetailActivity extends AppCompatActivity {
         imgCreateTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(ProjectDetailActivity.this, TaskCreateActivity.class);
+                /*Bundle bundle = new Bundle();
+                bundle.putInt(Constants.PROJECT_ID, ProjectId);
+                intent.putExtras(bundle);*/
+                intent.putExtra(Constants.PROJECT_ID, ProjectId);
+                startActivity(intent);
+                finish();
+            }
+        });
 
+        imgOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(ProjectDetailActivity.this, imgOptions);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_project_popup, popupMenu.getMenu());
+                popupMenu.show();
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getItemId() == R.id.menu_project_update){
+                            Intent intent = new Intent(ProjectDetailActivity.this, ProjectUpdateActivity.class);
+                            intent.putExtra(Constants.PROJECT_ID, ProjectId);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else if(item.getItemId() == R.id.menu_project_delete){
+                            new AlertDialog.Builder(ProjectDetailActivity.this)
+                                    .setTitle("Confirmation")
+                                    .setMessage("Are you sure you want to delete this item?")
+                                    .setIcon(R.drawable.baseline_warning_24)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    db.projectDAO().delete(project);
+                                                    runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            Toast.makeText(ProjectDetailActivity.this, "Delete successfully", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(ProjectDetailActivity.this, ProjectActivity.class);
+                                                            startActivity(intent);
+                                                            finish();
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .setNegativeButton("No", null).show();
+                        }
+                        return false;
+                    }
+                });
+
+                popupMenu.show();
             }
         });
     }
@@ -113,7 +181,7 @@ public class ProjectDetailActivity extends AppCompatActivity {
             @Override
             public void run() {
                 ProjectWithMembers result = db.projectDAO().getProjectWithMembersById(projectId);
-                Project project = result.project;
+                project = result.project;
                 members = result.members;
                 List<Task> tasks = db.taskDAO().getTasksByProjectId(projectId);
                 User manager = db.userDAO().getUserById(project.getManagerId());
@@ -135,11 +203,11 @@ public class ProjectDetailActivity extends AppCompatActivity {
 
                 if(project.getStatus() == 1){
                     tvStatus.setText(Constants.IN_PROGRESS);
-                    tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_in_progress_status));
+                    tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_green_status));
                 }
                 else if(project.getStatus() == 0){
                     tvStatus.setText(Constants.END);
-                    tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_end_status));
+                    tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_red_status));
                 }
                 else{
                     tvStatus.setText("Error");
@@ -172,6 +240,10 @@ public class ProjectDetailActivity extends AppCompatActivity {
                 memberAdapter.setProjectId(ProjectId);
                 rcvMembers.setAdapter(memberAdapter);
                 rcvMembers.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
+
+                taskAdapter = new TaskAdapter(tasks, isManager);
+                rcvTasks.setAdapter(taskAdapter);
+                rcvTasks.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
             }
         });
     }
