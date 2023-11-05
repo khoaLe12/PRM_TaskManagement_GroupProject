@@ -2,17 +2,22 @@ package adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.taskmanagement.R;
+import com.example.taskmanagement.project.MemberProfileActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -31,6 +36,13 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
     List<User> members;
     TaskStoreDatabase db;
     int projectId = 0;
+    boolean createTask = false;
+    int selectedMember = -1;
+    private OnSelectedMemberListener mListener;
+
+    public interface OnSelectedMemberListener{
+        void onSelectedMember(int userId);
+    }
 
     public MemberAdapter(List<User> members, boolean isManager){
         this.members = members;
@@ -46,14 +58,22 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         this.projectId = projectId;
     }
 
+    public void setCreateTask(boolean createTask){
+        this.createTask = createTask;
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        LayoutInflater layoutInflatter = LayoutInflater.from(context);
 
-        View view = layoutInflatter.inflate(R.layout.member_items, parent, false);
+        if(context instanceof OnSelectedMemberListener){
+            mListener = (OnSelectedMemberListener) context;
+        }
+
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+
+        View view = layoutInflater.inflate(R.layout.member_items, parent, false);
 
         ViewHolder holder = new ViewHolder(view);
 
@@ -68,6 +88,15 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                 .load(member.getImageUrl())
                 .transform(new CircleTransform())
                 .into(holder.imgAvatar);
+
+        if(createTask){
+            if(member.getUserId() == selectedMember){
+                holder.imgOut.setImageResource(R.drawable.baseline_check_24);
+            }
+            else{
+                holder.imgOut.setImageDrawable(null);
+            }
+        }
     }
 
     @Override
@@ -77,6 +106,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        LinearLayout llMember;
         ImageView imgAvatar, imgOut;
         TextView tvName;
 
@@ -88,31 +118,65 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             imgAvatar = itemView.findViewById(R.id.ivAvatar_member_item);
             tvName = itemView.findViewById(R.id.tvName_member_item);
             imgOut = itemView.findViewById(R.id.imgOut_member_item);
+            llMember = itemView.findViewById(R.id.llMemberProfile_member_item);
 
             if(isManager){
                 imgOut.setVisibility(View.VISIBLE);
+                imgOut.setImageResource(R.drawable.baseline_close_24);
+            }
+            else if(createTask){
+                imgOut.setVisibility(View.VISIBLE);
+                imgOut.setBackground(ActivityCompat.getDrawable(context, R.drawable.custom_layout_border));
             }
 
             imgOut.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            User member = members.get(getAdapterPosition());
-                            if(member != null){
-                                members.remove(member);
-                                UserProjectCrossRef entity = new UserProjectCrossRef(member.getUserId(), projectId);
-                                db.userProjectDAO().delete(entity);
-                                ((Activity)context).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notifyDataSetChanged();
-                                    }
-                                });
+                    if(isManager){
+                        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                User member = members.get(getAdapterPosition());
+                                if(member != null){
+                                    members.remove(member);
+                                    UserProjectCrossRef entity = new UserProjectCrossRef(member.getUserId(), projectId);
+                                    db.userProjectDAO().delete(entity);
+                                    ((Activity)context).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            notifyDataSetChanged();
+                                        }
+                                    });
+                                }
                             }
+                        });
+                    }
+                    else if(createTask){
+                        User member = members.get(getAdapterPosition());
+                        if(member.getUserId() != selectedMember){
+                            selectedMember = member.getUserId();
+                            mListener.onSelectedMember(selectedMember);
+                            notifyDataSetChanged();
                         }
-                    });
+                    }
+                }
+            });
+
+            llMember.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isManager){
+                        User member = members.get(getAdapterPosition());
+                        if(member != null){
+                            Intent intent = new Intent(context, MemberProfileActivity.class);
+                            intent.putExtra(Constants.PROJECT_ID, projectId);
+                            intent.putExtra(Constants.USER_ID, member.getUserId());
+                            ((Activity) context).startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(context, "Load user information fail", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             });
         }

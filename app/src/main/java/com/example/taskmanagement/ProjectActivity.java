@@ -83,6 +83,15 @@ public class ProjectActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        taskTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void initDb(){

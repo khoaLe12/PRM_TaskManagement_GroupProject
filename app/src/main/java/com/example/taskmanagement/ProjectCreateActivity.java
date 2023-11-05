@@ -116,7 +116,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
                                                 Log.e("Null InputStream", "Can not open input stream from provided stream");
                                                 return;
                                             }
-                                            Map uploadResult = cloudinary.uploader().upload(is, new HashMap());
+                                            Map options = new HashMap();
+                                            options.put("resource_type", "raw");
+                                            Map uploadResult = cloudinary.uploader().upload(is, options);
                                             String fileUrl = uploadResult.get("secure_url").toString();
                                             filePaths.put(entry.getKey(), fileUrl);
                                         }

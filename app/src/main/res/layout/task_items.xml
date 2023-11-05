@@ -11,65 +11,69 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
+        android:layout_weight="10">
         <TextView
-            android:id="@+id/tvTaskTitle"
-            android:layout_width="wrap_content"
+            android:id="@+id/tvTitle_task_item"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="5"
             android:text="Title"
             android:textSize="30sp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5">
 
             <TextView
-                android:id="@+id/tvConfirmStatus"
+                android:id="@+id/tvConfirmStatus_task_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:background="#5ACFA6"
                 android:paddingLeft="5sp"
                 android:paddingTop="3sp"
                 android:paddingRight="5sp"
                 android:paddingBottom="3sp"
-                android:text="Confirm"
+                android:text="Error"
                 android:textSize="17sp"
-                android:drawableLeft="@drawable/baseline_check_24"
-                app:layout_constraintEnd_toStartOf="@+id/tvTaskStatus"
+                app:layout_constraintEnd_toStartOf="@+id/tvTaskStatus_task_item"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tvTaskStatus"
+                android:id="@+id/tvTaskStatus_task_item"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="In Progress"
+                android:text="Error"
                 android:textSize="17sp"
                 android:paddingLeft="5sp"
                 android:paddingRight="5sp"
                 android:paddingTop="3sp"
                 android:paddingBottom="3sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="#5ACFA6"/>
+                app:layout_constraintTop_toTopOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="10">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Deadline: "
-            android:textSize="22sp"
-            android:layout_marginRight="20dp"/>
-        <TextView
-            android:id="@+id/tvDeadline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/tvDeadline_task_item"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
             android:text="Date"
-            android:textSize="22sp"/>
+            android:textSize="15sp"
+            android:layout_weight="8.8"/>
+
+        <ImageView
+            android:id="@+id/imgClear_task_item"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:src="@drawable/baseline_close_24"
+            android:layout_weight="1.2"/>
     </LinearLayout>
 </LinearLayout>

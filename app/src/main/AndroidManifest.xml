@@ -21,6 +21,16 @@
         android:theme="@style/Theme.TaskManagement"
         tools:targetApi="31">
         <activity
+<<<<<<< HEAD
+            android:name=".project.ProjectUpdateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".project.MemberProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TaskCreateActivity"
+            android:exported="false" />
+=======
             android:name=".MapActivity"
             android:exported="true">
             <intent-filter>
@@ -29,6 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+>>>>>>> 8246a7536bab671a989db33284fb7e5e520d1603
         <activity
             android:name=".ProjectDetailActivity"
             android:exported="false" />
