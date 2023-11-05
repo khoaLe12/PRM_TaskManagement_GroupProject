@@ -148,6 +148,8 @@
         android:layout_width="140dp"
         android:layout_height="55dp"
         android:layout_marginTop="28dp"
+        android:background="@drawable/shadow_button_style"
+        android:backgroundTint="#96DED1"
         android:text="Register"
         android:textSize="18sp"
         android:textStyle="bold"

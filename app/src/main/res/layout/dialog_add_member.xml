@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="Add member"
-        android:textColor="#6A7BF4"
         android:textSize="29sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,11 +37,13 @@
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:background="@drawable/shadow_button_style"
+        android:backgroundTint="#00A36C"
         android:text="Add"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etInviteCode_dialog" />
 
@@ -51,11 +52,13 @@
         android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:background="@drawable/shadow_button_style"
+        android:backgroundTint="#40E0D0"
         android:text="Back"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.892"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etInviteCode_dialog" />
 
