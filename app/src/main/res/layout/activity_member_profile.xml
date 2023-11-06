@@ -149,7 +149,7 @@ tools:context=".project.MemberProfileActivity">
             android:id="@+id/rcvTasks_member_profile"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
-            android:layout_height="160dp"/>
+            android:layout_height="200dp"/>
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton

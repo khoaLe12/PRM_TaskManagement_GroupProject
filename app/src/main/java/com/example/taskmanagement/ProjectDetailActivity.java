@@ -185,65 +185,71 @@ public class ProjectDetailActivity extends AppCompatActivity {
                 members = result.members;
                 List<Task> tasks = db.taskDAO().getTasksByProjectId(projectId);
                 User manager = db.userDAO().getUserById(project.getManagerId());
-                boolean isManager = false;
 
-                SharedPreferences shared = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE);
-                int userId = shared.getInt(Constants.USER_ID, 0);
-                if(userId == -1 || userId == project.getManagerId()){
-                    isManager = true;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            imgAddMember.setVisibility(View.VISIBLE);
-                            imgCreateTask.setVisibility(View.VISIBLE);
-                            imgOptions.setVisibility(View.VISIBLE);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean isManager = false;
+                        SharedPreferences shared = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE);
+                        int userId = shared.getInt(Constants.USER_ID, 0);
+                        if(userId == -1 || userId == project.getManagerId()){
+                            isManager = true;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imgAddMember.setVisibility(View.VISIBLE);
+                                    imgCreateTask.setVisibility(View.VISIBLE);
+                                    imgOptions.setVisibility(View.VISIBLE);
+                                }
+                            });
                         }
-                    });
-                }
 
-                if(project.getStatus() == 1){
-                    tvStatus.setText(Constants.IN_PROGRESS);
-                    tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_green_status));
-                }
-                else if(project.getStatus() == 0){
-                    tvStatus.setText(Constants.END);
-                    tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_red_status));
-                }
-                else{
-                    tvStatus.setText("Error");
-                }
-
-                if(manager != null){
-                    tvManager.setText(manager.getName());
-                }
-
-                if(project.getFilePaths() == null || project.getFilePaths().size() == 0){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            tvAttachmentEmpty.setVisibility(View.VISIBLE);
+                        if(project.getStatus() == 1){
+                            tvStatus.setText(Constants.IN_PROGRESS);
+                            tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_green_status));
                         }
-                    });
-                }
-                else{
-                    Set<String> keys = project.getFilePaths().keySet();
-                    List<String> names = new ArrayList<>(keys);
-                    attachmentAdapter = new AttachmentAdapter(names, project.getFilePaths());
-                    rcvAttachments.setAdapter(attachmentAdapter);
-                    rcvAttachments.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
-                }
-                tvTitle.setText(project.getTitle());
-                tvDate.setText(project.getCreatedDate().toString());
-                tvContent.setText(project.getContent());
+                        else if(project.getStatus() == 0){
+                            tvStatus.setText(Constants.END);
+                            tvStatus.setBackground(ContextCompat.getDrawable(ProjectDetailActivity.this, R.drawable.custom_red_status));
+                        }
+                        else{
+                            tvStatus.setText("Error");
+                        }
 
-                memberAdapter = new MemberAdapter(members, isManager);
-                memberAdapter.setProjectId(ProjectId);
-                rcvMembers.setAdapter(memberAdapter);
-                rcvMembers.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
+                        if(manager != null){
+                            tvManager.setText(manager.getName());
+                        }
 
-                taskAdapter = new TaskAdapter(tasks, isManager);
-                rcvTasks.setAdapter(taskAdapter);
-                rcvTasks.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
+                        if(project.getFilePaths() == null || project.getFilePaths().size() == 0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tvAttachmentEmpty.setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
+                        else{
+                            Set<String> keys = project.getFilePaths().keySet();
+                            List<String> names = new ArrayList<>(keys);
+                            attachmentAdapter = new AttachmentAdapter(names, project.getFilePaths());
+                            rcvAttachments.setAdapter(attachmentAdapter);
+                            rcvAttachments.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
+                        }
+                        tvTitle.setText(project.getTitle());
+                        tvDate.setText(project.getCreatedDate().toString());
+                        tvContent.setText(project.getContent());
+
+                        memberAdapter = new MemberAdapter(members, isManager);
+                        memberAdapter.setProjectId(ProjectId);
+                        rcvMembers.setAdapter(memberAdapter);
+                        rcvMembers.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
+
+                        taskAdapter = new TaskAdapter(tasks, isManager);
+                        taskAdapter.setProjectId(projectId);
+                        rcvTasks.setAdapter(taskAdapter);
+                        rcvTasks.setLayoutManager(new LinearLayoutManager(ProjectDetailActivity.this));
+                    }
+                });
             }
         });
     }

@@ -6,6 +6,9 @@ public class Constants {
     public static final String LOGIN = "Login";
     public static final String USER_ID= "User_Id";
     public static final String PROJECT_ID = "projectId";
+    public static final String TASK_ID = "taskId";
+
+    public static final String IS_MANAGER = "isManager";
 
     public static final String USERNAME_ALREADY_TAKEN = "Username is already taken";
     public static final String EMAIL_ALREADY_TAKEN = "Email is already taken";
