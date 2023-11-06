@@ -138,25 +138,24 @@ public class UserDashboardActivity extends AppCompatActivity {
 
         SharedPreferences shared = getSharedPreferences(Constants.LOGIN, MODE_PRIVATE);
         int userId = shared.getInt(Constants.USER_ID, 0);
-
-        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                loginUser = db.userDAO().getUserById(userId);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(loginUser != null){
-                            UserWithTasks userTask = db.userDAO().getUserWithTasksById(loginUser.getUserId());
+        if(userId != 0){
+            AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    UserWithTasks userTask = db.userDAO().getUserWithTasksById(userId);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loginUser = userTask.user;
                             if(userTask != null){
                                 int ongoing = 0;
                                 int done = 0;
                                 int overdue = 0;
-                                for(int i = 0; i < userTask.getTasks().size(); i++) {
-                                    if(userTask.getTasks().get(i).getStatus() == 0){
+                                for(int i = 0; i < userTask.tasks.size(); i++) {
+                                    if(userTask.tasks.get(i).getStatus() == 0){
                                         ongoing++;
                                     }
-                                    else if(userTask.getTasks().get(i).getStatus() == 1){
+                                    else if(userTask.tasks.get(i).getStatus() == 1){
                                         done++;
                                     }
                                     else{
@@ -169,20 +168,25 @@ public class UserDashboardActivity extends AppCompatActivity {
                                 float overduePercent = overdue/total;
                                 setChartData(ongoingPercent, donePercent, overduePercent);
                             }
-                            Picasso.get()
-                                    .load(loginUser.getImageUrl())
-                                    .transform(new CircleTransform())
-                                    .into(imgAvatar);
-                            txtName.setText(loginUser.getName());
-                            txtEmail.setText(loginUser.getEmail());
+                            if(loginUser != null){
+                                Picasso.get()
+                                        .load(loginUser.getImageUrl())
+                                        .transform(new CircleTransform())
+                                        .into(imgAvatar);
+                                txtName.setText(loginUser.getName());
+                                txtEmail.setText(loginUser.getEmail());
+                            }
+                            else{
+                                Toast.makeText(UserDashboardActivity.this, "Load data failed", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-                            Toast.makeText(UserDashboardActivity.this, "Load data failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
+        else{
+            Toast.makeText(UserDashboardActivity.this, "Load data failed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void openProfile(){

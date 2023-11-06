@@ -9,18 +9,18 @@ import models.Task;
 import models.User;
 
 public class UserWithTasks {
-    @Embedded private User user;
+    @Embedded public User user;
     @Relation(
             parentColumn = "userId",
             entityColumn = "creatorId"
     )
-    private List<Task> tasks;
+    public List<Task> tasks;
 
-    public User getUser() {
+    /*public User getUser() {
         return user;
     }
 
     public List<Task> getTasks() {
         return tasks;
-    }
+    }*/
 }
