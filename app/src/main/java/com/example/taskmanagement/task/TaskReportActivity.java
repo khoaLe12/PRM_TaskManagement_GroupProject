@@ -1,4 +1,4 @@
-package com.example.taskmanagement.project;
+package com.example.taskmanagement.task;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,12 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cloudinary.Cloudinary;
-import com.example.taskmanagement.ProjectCreateActivity;
-import com.example.taskmanagement.ProjectDetailActivity;
 import com.example.taskmanagement.R;
+import com.example.taskmanagement.project.ProjectUpdateActivity;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,33 +38,45 @@ import configurations.CloudinaryConfig;
 import constants.Constants;
 import database.TaskStoreDatabase;
 import executors.AppExecutors;
-import models.Project;
+import models.Task;
 
-public class ProjectUpdateActivity extends AppCompatActivity {
+public class TaskReportActivity extends AppCompatActivity {
 
     ImageView imgBack;
-    EditText etTitle, etContent;
+    EditText etContent;
     Button btnSave;
-    LinearLayout llChooseFile, llShowFiles;
+    LinearLayout llShowFiles, llChooseFile;
     TaskStoreDatabase db;
-    Project project;
+
     Map<String, Uri> addedFiles;
     Map<String, String> files;
+    Task task;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project_update);
+        setContentView(R.layout.activity_task_report);
 
         Intent intent = getIntent();
-        int projectId = intent.getIntExtra(Constants.PROJECT_ID, 0);
-        if(projectId > 0){
+        int taskId = intent.getIntExtra(Constants.TASK_ID, 0);
+        if(taskId != 0){
             files = new HashMap<>();
             addedFiles = new HashMap<>();
 
             initView();
             initDb();
-            loadData(projectId);
+            loadData(taskId);
+
+            imgBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(TaskReportActivity.this, TaskDetailActivity.class);
+                    intent.putExtra(Constants.TASK_ID, taskId);
+                    startActivity(intent);
+                    finish();
+                }
+            });
 
             llChooseFile.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,7 +94,7 @@ public class ProjectUpdateActivity extends AppCompatActivity {
                             startActivityForResult(Intent.createChooser(intent, "Selecte a File to Upload"), Constants.FILE_SELECT_CODE);
                         }
                         catch (android.content.ActivityNotFoundException ex){
-                            Toast.makeText(ProjectUpdateActivity.this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TaskReportActivity.this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -91,126 +103,66 @@ public class ProjectUpdateActivity extends AppCompatActivity {
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String title = etTitle.getText().toString();
-                    String content = etContent.getText().toString();
-                    if(validate(title)){
-
-                        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                project.setTitle(title);
-                                project.setContent(content);
-                                if(addedFiles.size() > 0){
-                                    Cloudinary cloudinary = CloudinaryConfig.getCloudinary();
-                                    for(Map.Entry<String, Uri> entry : addedFiles.entrySet()){
-                                        if(entry.getValue() != null){
-                                            try{
-                                                InputStream is = getContentResolver().openInputStream(entry.getValue());
-                                                if(is == null){
-                                                    Log.e("Null InputStream", "Can not open input stream from provided stream");
-                                                    return;
-                                                }
-                                                Map options = new HashMap();
-                                                options.put("resource_type", "raw");
-                                                Map uploadResult = cloudinary.uploader().upload(is, options);
-                                                String fileUrl = uploadResult.get("secure_url").toString();
-                                                files.put(entry.getKey(), fileUrl);
+                    AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            task.setReport(etContent.getText().toString());
+                            if(addedFiles.size() > 0){
+                                Cloudinary cloudinary = CloudinaryConfig.getCloudinary();
+                                for(Map.Entry<String, Uri> entry : addedFiles.entrySet()){
+                                    if(entry.getValue() != null){
+                                        try{
+                                            InputStream is = getContentResolver().openInputStream(entry.getValue());
+                                            if(is == null){
+                                                Log.e("Null InputStream", "Can not open input stream from provided stream");
+                                                return;
                                             }
-                                            catch (Exception ex){
-                                                Log.e("Error cloudinary", "Ko upload đc file: " + ex.toString());
-                                                throw new RuntimeException(ex);
-                                            }
+                                            Map options = new HashMap();
+                                            options.put("resource_type", "raw");
+                                            Map uploadResult = cloudinary.uploader().upload(is, options);
+                                            String fileUrl = uploadResult.get("secure_url").toString();
+                                            files.put(entry.getKey(), fileUrl);
+                                        }
+                                        catch (Exception ex){
+                                            Log.e("Error cloudinary", "Ko upload đc file: " + ex.toString());
+                                            throw new RuntimeException(ex);
                                         }
                                     }
                                 }
-                                project.setFilePaths(files);
-                                db.projectDAO().update(project);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(ProjectUpdateActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(ProjectUpdateActivity.this, ProjectDetailActivity.class);
-                                        intent.putExtra(Constants.PROJECT_ID, project.getProjectId());
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                });
                             }
-                        });
-                    }
-                }
-            });
+                            task.setFilePaths(files);
+                            if(task.getStatus() == 0){
+                                Date current = new Date();
+                                Date deadline = task.getDeadline();
+                                int compare = deadline.compareTo(current);
+                                if(compare >= 0){
+                                    task.setStatus(1);
+                                }
+                                else{
+                                    task.setStatus(2);
+                                }
+                            }
+                            db.taskDAO().update(task);
 
-            imgBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ProjectUpdateActivity.this, ProjectDetailActivity.class);
-                    intent.putExtra(Constants.PROJECT_ID, project.getProjectId());
-                    startActivity(intent);
-                    finish();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent intent = new Intent(TaskReportActivity.this, TaskDetailActivity.class);
+                                    intent.putExtra(Constants.TASK_ID, taskId);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
+                    });
+
+
                 }
             });
         }
         else{
             Toast.makeText(this, "Load information fail", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private boolean validate(String title){
-        boolean result = true;
-
-        if(title == null || title.trim().length() == 0){
-            etTitle.setError(Constants.REQUIRE_MESSAGE);
-            result = false;
-        }
-
-        return result;
-    }
-
-    private void initView(){
-        imgBack = findViewById(R.id.imgArrowBack_project_update);
-        etTitle = findViewById(R.id.etTitle_project_update);
-        etContent = findViewById(R.id.etContent_project_update);
-        btnSave = findViewById(R.id.btnUpdate_project_update);
-        llChooseFile = findViewById(R.id.layoutChooseFile_project_update);
-        llShowFiles = findViewById(R.id.linearLayout_showFile_update_project);
-    }
-
-    private void initDb(){
-        db = Room.databaseBuilder(getApplicationContext(), TaskStoreDatabase.class, Constants.DB_NAME).build();
-    }
-
-    private void loadData(int projectId){
-        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                project = db.projectDAO().getProjectById(projectId);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(project != null){
-                            if(project.getFilePaths() != null){
-                                files = project.getFilePaths();
-                            }
-                            etTitle.setText(project.getTitle());
-                            etContent.setText(project.getContent());
-                            if(files != null && files.size() > 0){
-                                for(String fileName : files.keySet()){
-                                    addNewFile(fileName, false);
-                                }
-                                if(files.size() >= 3){
-                                    llChooseFile.setEnabled(false);
-                                }
-                            }
-                        }
-                        else{
-                            Toast.makeText(ProjectUpdateActivity.this, "Load information fail", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-        });
-
     }
 
     @Override
@@ -289,12 +241,55 @@ public class ProjectUpdateActivity extends AppCompatActivity {
                     startActivityForResult(Intent.createChooser(intent, "Selecte a File to Upload"), Constants.FILE_SELECT_CODE);
                 }
                 catch (android.content.ActivityNotFoundException ex){
-                    Toast.makeText(ProjectUpdateActivity.this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TaskReportActivity.this, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(this, "Permission Denied - " + grantResults.length + " - " + grantResults[0], Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void initView(){
+        imgBack = findViewById(R.id.imgArrowBack_task_report);
+        etContent = findViewById(R.id.etContent_task_report);
+        btnSave = findViewById(R.id.btnCreate_task_report);
+        llShowFiles = findViewById(R.id.linearLayout_addedFile_task_report);
+        llChooseFile = findViewById(R.id.layoutAddFile_task_report);
+    }
+
+    private void initDb(){
+        db = Room.databaseBuilder(getApplicationContext(), TaskStoreDatabase.class, Constants.DB_NAME).build();
+    }
+
+    private void loadData(int taskId){
+        AppExecutors.getInstance().getDiskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                task = db.taskDAO().getTaskById(taskId);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(task != null){
+                            if(task.getFilePaths() != null){
+                                files = task.getFilePaths();
+                            }
+                            etContent.setText(task.getReport());
+                            if(files != null && files.size() > 0){
+                                for(String fileName : files.keySet()){
+                                    addNewFile(fileName, false);
+                                }
+                                if(files.size() >= 3){
+                                    llChooseFile.setEnabled(false);
+                                }
+                            }
+                        }
+                        else{
+                            Toast.makeText(TaskReportActivity.this, "Load information fail", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void addNewFile(String displayName, boolean isAddedFiles){

@@ -2,11 +2,13 @@ package adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.taskmanagement.R;
+import com.example.taskmanagement.task.TaskDetailActivity;
 
 import java.util.List;
 
@@ -27,17 +30,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     Context context;
     List<Task> tasks;
-    boolean showCancel = false;
+    boolean isManager = false;
+    int projectId = -1;
     TaskStoreDatabase db;
 
-    public TaskAdapter(List<Task> tasks, boolean showCancel){
+    public TaskAdapter(List<Task> tasks, boolean isManager){
         this.tasks = tasks;
-        this.showCancel = showCancel;
+        this.isManager = isManager;
     }
 
     public void setList(List<Task> tasks){
         this.tasks = tasks;
         notifyDataSetChanged();
+    }
+
+    public void setProjectId(int projectId){
+        this.projectId = projectId;
     }
 
     @NonNull
@@ -110,6 +118,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         TextView tvTitle, tvDeadline, tvConfirm, tvTaskStatus;
         ImageView imgClear;
+        LinearLayout llTaskItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,8 +130,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvConfirm = itemView.findViewById(R.id.tvConfirmStatus_task_item);
             tvTaskStatus = itemView.findViewById(R.id.tvTaskStatus_task_item);
             imgClear = itemView.findViewById(R.id.imgClear_task_item);
+            llTaskItem = itemView.findViewById(R.id.llTaskItem_task_item);
 
-            if(showCancel){
+            if(isManager){
                 imgClear.setVisibility(View.VISIBLE);
             }
 
@@ -145,6 +155,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                             }
                         }
                     });
+                }
+            });
+
+            llTaskItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, TaskDetailActivity.class);
+                    intent.putExtra(Constants.TASK_ID, tasks.get(getAdapterPosition()).getTaskId());
+                    intent.putExtra(Constants.IS_MANAGER, isManager);
+                    if(projectId != -1){
+                        intent.putExtra(Constants.PROJECT_ID, projectId);
+                    }
+                    Activity activity = (Activity) context;
+                    activity.startActivity(intent);
+                    activity.finish();
                 }
             });
         }

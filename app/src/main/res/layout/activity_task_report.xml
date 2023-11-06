@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProjectCreateActivity">
+    tools:context=".task.TaskReportActivity">
 
     <ImageView
-        android:id="@+id/imgArrowBack_project_create"
+        android:id="@+id/imgArrowBack_task_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Create new project"
+        android:text="Task Report"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,22 +48,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="20dp"
-                android:text="Title"
-                android:textSize="20sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="20dp"
                 android:text="Content"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:gravity="center"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginBottom="20dp"
                 android:text="File"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:gravity="center"/>
         </LinearLayout>
 
         <LinearLayout
@@ -73,7 +68,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/etTitle_project_create"
+                android:id="@+id/etContent_task_report"
                 android:layout_width="290dp"
                 android:layout_height="50dp"
                 android:layout_marginBottom="20dp"
@@ -81,18 +76,8 @@
                 android:textSize="20sp"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
-            <EditText
-                android:id="@+id/etContent_project_create"
-                android:layout_width="290dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/custom_layout_border"
-                android:inputType="text"
-                android:textSize="20sp"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
             <LinearLayout
-                android:id="@+id/layoutFile_project_create"
+                android:id="@+id/layoutAddFile_task_report"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/custom_choose_file_border"
@@ -123,7 +108,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout_addedFile_create_project"
+        android:id="@+id/linearLayout_addedFile_task_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -132,18 +117,19 @@
         android:orientation="vertical"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnCreate_project_create"
+        android:id="@+id/btnCreate_task_report"
         android:layout_width="140dp"
         android:layout_height="55dp"
-        android:background="@drawable/shadow_button_style"
-        android:backgroundTint="#32CD32"
-        android:text="Create"
+        android:background="@drawable/custom_layout_border"
+        android:backgroundTint="#6A7BF4"
+        android:text="Update"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout_addedFile_create_project" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_addedFile_task_report" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
