@@ -127,6 +127,12 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/txtTotalTask"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Total Task: 0" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
@@ -182,6 +188,7 @@
                             android:text="Overdue" />
 
                     </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -236,6 +243,12 @@
                             android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtTotalProject"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Total Project: 0" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"

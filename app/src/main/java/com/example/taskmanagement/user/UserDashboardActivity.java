@@ -36,6 +36,7 @@ public class UserDashboardActivity extends AppCompatActivity {
     User loginUser;
     ImageView imgAvatar, imgLogout;
     TextView txtName, txtEmail, txtToday;
+    TextView txtTotalTask, txtTotalProject;
     TaskStoreDatabase db;
     PieChart pieTaskStatistic, pieProjectStatistic;
 
@@ -135,6 +136,8 @@ public class UserDashboardActivity extends AppCompatActivity {
         billTab = findViewById(R.id.billTab_user_dashboard);
         pieTaskStatistic = findViewById(R.id.pieTaskStatistic);
         pieProjectStatistic = findViewById(R.id.pieProjectStatistic);
+        txtTotalTask = findViewById(R.id.txtTotalTask);
+        txtTotalProject = findViewById(R.id.txtTotalProject);
     }
 
     private void initDb(){
@@ -174,6 +177,7 @@ public class UserDashboardActivity extends AppCompatActivity {
                                 float ongoingPercent = ongoing/total;
                                 float donePercent = done/total;
                                 float overduePercent = overdue/total;
+                                txtTotalTask.setText(String.valueOf(userTask.tasks.size()));
                                 setTaskPieChartData(ongoingPercent, donePercent, overduePercent);
                             }
                             if (memberProject != null){
@@ -190,6 +194,7 @@ public class UserDashboardActivity extends AppCompatActivity {
                                 float total = inprogress + done;
                                 float inprogressPercent = inprogress/total;
                                 float donePercent = done/total;
+                                txtTotalProject.setText(String.valueOf(memberProject.projects.size()));
                                 setProjectPieChartData(inprogressPercent, donePercent);
                             }
                             if(loginUser != null){
