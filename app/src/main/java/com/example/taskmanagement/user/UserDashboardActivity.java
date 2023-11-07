@@ -26,6 +26,7 @@ import constants.Constants;
 import database.TaskStoreDatabase;
 import executors.AppExecutors;
 import models.User;
+import models.relationships.MemberWithProjects;
 import models.relationships.UserWithTasks;
 import utils.CircleTransform;
 
@@ -36,7 +37,7 @@ public class UserDashboardActivity extends AppCompatActivity {
     ImageView imgAvatar, imgLogout;
     TextView txtName, txtEmail, txtToday;
     TaskStoreDatabase db;
-    PieChart pieChart;
+    PieChart pieTaskStatistic, pieProjectStatistic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,10 +107,15 @@ public class UserDashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void setChartData(float ongoingPercent, float donePercent, float overduePercent) {
-        pieChart.addPieSlice(new PieModel("Ongoing", ongoingPercent, Color.parseColor("#FFEB3B")));
-        pieChart.addPieSlice(new PieModel("Done", donePercent, Color.parseColor("#8BC34A")));
-        pieChart.addPieSlice(new PieModel("Overdue", overduePercent, Color.parseColor("#F44336")));
+    private void setTaskPieChartData(float ongoingPercent, float donePercent, float overduePercent) {
+        pieTaskStatistic.addPieSlice(new PieModel("Ongoing", ongoingPercent, Color.parseColor("#FFEB3B")));
+        pieTaskStatistic.addPieSlice(new PieModel("Done", donePercent, Color.parseColor("#8BC34A")));
+        pieTaskStatistic.addPieSlice(new PieModel("Overdue", overduePercent, Color.parseColor("#F44336")));
+    }
+
+    private void setProjectPieChartData(float inprogressPercent, float donePercent) {
+        pieProjectStatistic.addPieSlice(new PieModel("In Progress", inprogressPercent, Color.parseColor("#FFEB3B")));
+        pieProjectStatistic.addPieSlice(new PieModel("Done", donePercent, Color.parseColor("#8BC34A")));
     }
 
     @Override
@@ -127,7 +133,8 @@ public class UserDashboardActivity extends AppCompatActivity {
         projectTab = findViewById(R.id.projectTab_user_dashboard);
         taskTab = findViewById(R.id.taskTab_user_dashboard);
         billTab = findViewById(R.id.billTab_user_dashboard);
-        pieChart = findViewById(R.id.piechart);
+        pieTaskStatistic = findViewById(R.id.pieTaskStatistic);
+        pieProjectStatistic = findViewById(R.id.pieProjectStatistic);
     }
 
     private void initDb(){
@@ -143,6 +150,7 @@ public class UserDashboardActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     UserWithTasks userTask = db.userDAO().getUserWithTasksById(userId);
+                    MemberWithProjects memberProject = db.userDAO().getMemberWithProjectsById(userId);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -166,7 +174,23 @@ public class UserDashboardActivity extends AppCompatActivity {
                                 float ongoingPercent = ongoing/total;
                                 float donePercent = done/total;
                                 float overduePercent = overdue/total;
-                                setChartData(ongoingPercent, donePercent, overduePercent);
+                                setTaskPieChartData(ongoingPercent, donePercent, overduePercent);
+                            }
+                            if (memberProject != null){
+                                int inprogress = 0;
+                                int done = 0;
+                                for(int i = 0; i < memberProject.projects.size(); i++) {
+                                    if(memberProject.projects.get(i).getStatus() == 0){
+                                        inprogress++;
+                                    }
+                                    else{
+                                        done++;
+                                    }
+                                }
+                                float total = inprogress + done;
+                                float inprogressPercent = inprogress/total;
+                                float donePercent = done/total;
+                                setProjectPieChartData(inprogressPercent, donePercent);
                             }
                             if(loginUser != null){
                                 Picasso.get()
