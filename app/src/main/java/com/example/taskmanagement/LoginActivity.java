@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         initDb();
 
         //Create admin and user account
-        //createAccount();
+//        createAccount();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

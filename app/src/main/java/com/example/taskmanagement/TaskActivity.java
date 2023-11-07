@@ -83,6 +83,15 @@ public class TaskActivity extends AppCompatActivity {
                     finish();
                 }
             });
+
+            billTab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(TaskActivity.this, BillActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
         }
         else{
             Toast.makeText(this, "Load information fail", Toast.LENGTH_SHORT).show();

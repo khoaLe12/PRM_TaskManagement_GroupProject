@@ -59,4 +59,9 @@ dependencies {
 
     //Google map
     implementation("com.google.android.gms:play-services-maps:18.0.1")
+
+    //Momo
+    implementation("com.github.momo-wallet:mobile-sdk:1.0.7") {
+        exclude(group = "com.android.support")
+    }
 }

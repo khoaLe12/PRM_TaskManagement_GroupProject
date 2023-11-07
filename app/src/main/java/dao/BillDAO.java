@@ -13,6 +13,9 @@ import models.Bill;
 @Dao
 public interface BillDAO {
 
+    @Query("SELECT * FROM bill")
+    List<Bill> getAll();
+
     @Query("SELECT * FROM bill WHERE id IN (:billId) LIMIT 1")
     Bill getBillById(int billId);
 

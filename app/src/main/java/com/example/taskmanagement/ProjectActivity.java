@@ -92,6 +92,15 @@ public class ProjectActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        billTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProjectActivity.this, BillActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void initDb(){
